@@ -1,0 +1,65 @@
+---
+title: "Economía Naranja"
+author: "Rodrigo Navas"
+date: "7/3/2021"
+output: html_document
+---
+```{r}
+orangeec <- read.csv("C://Users//Rodrigo//Documents//Importante//Platzi//R//orangeec.csv")
+data(orangeec)
+summary(orangeec)
+```
+Parece que hay correlación entre aprote de economía narajnja al PIB y la tasa de desempleo.
+```{r}
+pairs(orangeec[, 6:10])
+```
+```{r}
+library(ggplot2)
+```
+```{r}
+ggplot() + geom_histogram(
+  data = orangeec, 
+  aes(x = orangeec$Internet),
+  fill = "cyan",
+  color = "black",
+  binwidth = 5) +
+  scale_x_continuous(breaks = seq(30, 100, by = 5)) +
+  labs(x = "Aporte economía naranja al PIB (%)",
+       y = "Contruibución economía naranja a Latam",
+       title = "PIB per cápita en paises Latam") +
+  theme(legend.position = "none") +
+  theme(panel.background = element_blank(),
+        panel.grid.minor = element_blank())
+```
+```{r}
+library(dplyr)
+```
+```{r}
+economy <- mean(orangeec$GDP.PC)
+economy
+```
+```{r}
+orangeec <- orangeec %>% mutate(
+  Strong_economy = ifelse(GDP.PC < economy,
+                          "Debajo del promedio PIB",
+                          "Sobre el promedio PIB"))
+```
+```{r}
+ggplot(orangeec, aes(
+  x = Strong_economy, y = Creat.Ind...GDP,
+  fill = Strong_economy)) +
+  geom_boxplot(alpha = 0.4) +
+  scale_y_continuous(breaks = seq(0, 8, by = 0.5)) +
+  labs(x = "Tipo de país", 
+       y = "Aporte EcNa al PIB",
+       title = "Aporte EcNa en PIB promedio") + 
+  theme(legend.position = "none") 
+  theme(panel.grid.major = element_blank()
+        #panel.grid.minor = element_blank()
+        )
+```
+El boxplot indica que los países sobre el promedio del PIB per cápita, tienen una disperción mucho más alta en cuanto a los paortes de la economía naranja del PIB del país. 
+PD. confirmar con desviación estándar
+
+
+
